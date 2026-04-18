@@ -79,29 +79,19 @@ We extended the TruFor inference pipeline by adding visual explainability and co
 
 ---
 
-## Project Structure
-test_docker/
-│
-├── data/ # Input images
-├── output/ # Model output files
-├── visual_outputs/ # Generated visualizations
-│
-├── src/
-│ ├── trufor_test.py # Runs model inference
-│ ├── check_scores.py # Modified visualization script
-│
-├── weights/
-│ └── trufor.pth.tar # Pretrained weights
-
----
-
 ## How to Run
 
 ### Step 1: Run inference
+
+```bash
 python trufor_test.py --gpu -1 --input ../data --output ../output
+```
 
 ### Step 2: Generate visual outputs
+
+```bash
 python check_scores.py
+```
 
 ---
 
