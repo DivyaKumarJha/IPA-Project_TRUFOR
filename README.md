@@ -1,81 +1,141 @@
-# TruFor
+# TruFor-Based Image Forgery Detection and Visualization
 
-[![TruFor](https://img.shields.io/badge/TruFor%20webpage-222222.svg?style=for-the-badge&logo=github)](https://grip-unina.github.io/TruFor)
-[![arXiv](https://img.shields.io/badge/-arXiv-B31B1B.svg?style=for-the-badge)](https://doi.org/10.48550/arXiv.2212.10957)
-[![GRIP](https://img.shields.io/badge/-GRIP-0888ef.svg?style=for-the-badge)](https://www.grip.unina.it)
+## Video Demonstration
 
-Official PyTorch implementation of the paper "TruFor: Leveraging all-round clues for trustworthy image forgery detection and localization"
+A detailed video explanation of the implementation and results is available at:
 
-<p align="center">
- <img src="./docs/teaser.png" alt="teaser" width="70%" />
-</p>
-
-## News
-*   TODO: release Noiseprint++ training code
-*   2025-03-05: Training code is now available
-*   2023-06-28: Test code is now available
-*   2023-02-27: Paper has been accepted at CVPR 2023
-*   2022-12-21: Paper has been uploaded on arXiv
-
+https://drive.google.com/drive/u/0/folders/14tU6L69XOfVKw0aa3rL_DYiL41YWg1AY
 
 ## Overview
 
-**TruFor** is a forensic framework that can be applied to a large variety of image manipulation methods, from classic cheapfakes to more recent manipulations based on deep learning. We rely on the extraction of both high-level and low-level traces through a transformer-based fusion architecture that combines the RGB image and a learned noise-sensitive fingerprint. The latter learns to embed the artifacts related to the camera internal and external processing by training only on real data in a self-supervised manner. Forgeries are detected as deviations from the expected regular pattern that characterizes each pristine image. Looking for anomalies makes the approach able to robustly detect a variety of local manipulations, ensuring generalization. In addition to a pixel-level **localization map** and a whole-image **integrity score**, our approach outputs a **reliability map** that highlights areas where localization predictions may be error-prone. This is particularly important in forensic applications in order to reduce false alarms and allow for a large scale analysis. Extensive experiments on several datasets show that our method is able to reliably detect and localize both cheapfakes and deepfakes manipulations outperforming state-of-the-art works.
+This project is based on the TruFor framework for image forgery detection and localization. The method combines low level forensic traces and high level visual features to identify manipulated regions in images and provide reliable predictions.
 
+In this project, the official TruFor implementation was used with pretrained weights. The system was then extended by adding a visualization pipeline to improve interpretability and reduce false positives using confidence aware filtering.
 
-## Architecture
+Reference for original method and workflow:
+https://grip-unina.github.io/TruFor/
 
-<center> <img src="./docs/architecture.png" alt="architecture" width="80%" /> </center>
+---
 
-We cast the forgery localization task as a supervised binary segmentation problem, combining high-level (**RGB**) and low-level (**Noiseprint++**) features using a cross-modal framework.
+## Objectives
 
+- Execute TruFor using pretrained weights  
+- Perform image level forgery detection using integrity score  
+- Generate anomaly maps and confidence maps  
+- Improve output interpretability through visualization  
+- Reduce false positives using confidence based filtering  
 
-## Docker Setup (inference only)
+---
 
-Follow the instructions in the README.md in the `test_docker` folder.
+## Mid Term Implementation
 
-## Training and inference
+During the mid term phase, the following steps were completed:
 
-Follow the instructions in the README.md in the `TruFor_train_test` folder.
+- Cloned the official TruFor GitHub repository  
+- Set up the environment and dependencies  
+- Ran the model using pretrained weights  
+- Performed inference on sample images  
+- Generated:
+  - Anomaly map  
+  - Confidence map  
+  - Integrity score  
+- Classified images as REAL or FAKE using a threshold of 0.5  
 
+The system was successfully executed end to end from input image to final prediction.
 
-## CocoGlide dataset
+---
 
-You can download the CocoGlide dataset [here](https://www.grip.unina.it/download/prog/TruFor/CocoGlide.zip).
+## End Term Improvements
 
+The following enhancements were added to the original pipeline:
 
-## License
+### Visualization Pipeline
 
-Copyright (c) 2023 Image Processing Research Group of University Federico II of Naples ('GRIP-UNINA'). 
+- Converted anomaly maps into heatmaps using OpenCV  
+- Overlayed heatmaps on original images  
+- Generated visual outputs for easier interpretation  
 
-All rights reserved.
+### Confidence Aware Filtering
 
-This software should be used, reproduced and modified only for informational and nonprofit purposes.
+- Applied element wise multiplication of anomaly and confidence maps  
+- Suppressed unreliable detections  
+- Produced cleaner and more reliable localization results  
 
-By downloading and/or using any of these files, you implicitly agree to all the
-terms of the license, as specified in the document LICENSE.txt
-(included in this package) 
+### Side by Side Comparison
 
+Generated combined output images showing:
 
-## Bibtex
- 
- ```
- @InProceedings{Guillaro_2023_CVPR,
-    author    = {Guillaro, Fabrizio and Cozzolino, Davide and Sud, Avneesh and Dufour, Nicholas and Verdoliva, Luisa},
-    title     = {TruFor: Leveraging All-Round Clues for Trustworthy Image Forgery Detection and Localization},
-    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    month     = {June},
-    year      = {2023},
-    pages     = {20606-20615}
-}
-```
+- Original image  
+- Raw anomaly overlay  
+- Confidence filtered overlay  
 
+This allows direct comparison between raw and refined predictions.
 
-## Acknowledgments
- 
-We gratefully acknowledge the support of this research by the Defense Advanced Research Projects Agency (DARPA) under agreement number FA8750-20-2-1004. 
-The U.S. Government is authorized to reproduce and distribute reprints for Governmental purposes notwithstanding any copyright notation thereon.
-The views and conclusions contained herein are those of the authors and should not be interpreted as necessarily representing the official policies or endorsements, either expressed or implied, of DARPA or the U.S. Government.
+---
 
-In addition, this work has received funding by the European Union under the Horizon Europe vera.ai project, Grant Agreement number 101070093, and is supported by Google and by the PREMIER project, funded by the Italian Ministry of Education, University, and Research within the PRIN 2017 program.
-Finally, we would like to thank Chris Bregler for useful discussions and support.
+## Key Contribution
+
+We extended the TruFor inference pipeline by adding visual explainability and confidence aware filtering, making the system more interpretable and reliable without modifying the core model.
+
+---
+
+## Project Structure
+test_docker/
+│
+├── data/ # Input images
+├── output/ # Model output files
+├── visual_outputs/ # Generated visualizations
+│
+├── src/
+│ ├── trufor_test.py # Runs model inference
+│ ├── check_scores.py # Modified visualization script
+│
+├── weights/
+│ └── trufor.pth.tar # Pretrained weights
+
+---
+
+## How to Run
+
+### Step 1: Run inference
+python trufor_test.py --gpu -1 --input ../data --output ../output
+
+### Step 2: Generate visual outputs
+python check_scores.py
+
+---
+
+## Output
+
+For each input image, the system produces:
+
+- Integrity score for classification  
+- Anomaly map highlighting suspicious regions  
+- Confidence map indicating reliability  
+- Overlay visualization  
+- Confidence filtered overlay  
+- Side by side comparison image  
+
+---
+
+## Observations
+
+- Raw anomaly maps may contain false positives in uniform or textured regions  
+- Confidence filtering helps suppress unreliable detections  
+- Visualization significantly improves interpretability  
+- The system performs robustly even on compressed images  
+
+---
+
+## Future Work
+
+- Evaluation on benchmark datasets such as CASIA and Columbia  
+- Fine tuning on domain specific datasets such as social media images  
+- End to end training of all modules jointly  
+- Extension to detect fully AI generated images  
+
+---
+
+## Conclusion
+
+This project successfully demonstrates the TruFor framework and extends it with a practical visualization pipeline. The added confidence aware filtering improves the reliability of localization results and makes the system more suitable for real world applications.
